@@ -16,7 +16,7 @@ public class video2Image {
 	private String veidoPath;
 	private String imagePath;
 	private String startTime;
-	//private String frequency;
+	private String frequency;
 	private String pictureNum;
 	
 	public video2Image(File fileVideo){
@@ -27,52 +27,59 @@ public class video2Image {
 		this.imagePath = image.getAbsolutePath(); //圖片暫存位置
 	}
 	
-	public String setFrequency(){	//根據開始和結束時間算截圖頻率
-		return null;
-		//TODO
+	public String setFrequency(int startHours, int startMinutes, int startSeconds,
+							   int endHours, int endMinutes, int endSeconds, int num){	//根據開始和結束時間算截圖頻率
+		double stayTime = (endHours * 60 * 60 + endMinutes * 60 + endSeconds) - (startHours * 60 * 60 + startMinutes * 60 + startSeconds) + 1;
+		return Double.toString(num/stayTime);
 	}
 	
 	public String setTime(int hours, int minutes, int seconds){	
 		return Integer.toString(hours * 60 * 60 + minutes * 60 + seconds);
 	}
 	
-	public void captureScreen(int startHours, int startMinutes, int startSeconds, int pictureNum) {
-								// int endHours, int endMinutes, int endSeconds){	//setFrequency寫完才有結束時間,目前為預設頻率連續截圖
+	public void captureScreen(int startHours, int startMinutes, int startSeconds,
+							  int endHours, int endMinutes, int endSeconds, int pictureNum){	//擷取頭跟尾還需優化校正
 		
 		this.startTime = setTime(startHours, startMinutes, startSeconds);
+		this.frequency = setFrequency(startHours, startMinutes, startSeconds,
+									endHours, endMinutes, endSeconds, pictureNum);
+
 		this.pictureNum = Integer.toString(pictureNum);
 		
 		ArrayList<String> commands = new ArrayList<String>();
 
-		commands.add(ffmpegPath);
+		commands.add(ffmpegPath); 	//指令路徑
 
-		commands.add("-i");
+		commands.add("-i");			//影片路徑
 
 		commands.add(veidoPath);
 		
-		commands.add("-f");
+		commands.add("-f");			//型態
 		
 		commands.add("image2");
 
-		commands.add("-ss");
+		commands.add("-ss");		//設置截取視頻開始時間
 
-		commands.add(startTime);//設置截取視頻開始時間
+		commands.add(startTime);
+		
+		commands.add("-vf");		//幀數
+		
+		commands.add("fps=" + frequency);
 
-		commands.add("-frames");//切割長度
+		commands.add("-frames");	//擷取張數
 
 		commands.add(this.pictureNum);
+		
+		commands.add("-y");			//覆蓋圖片
 		
 		commands.add(imagePath + "\\%d.jpg");
 
 		try {
 			ProcessBuilder builder = new ProcessBuilder(commands);
-			builder.start();
-			//cmd執行結果(debug用)
-			/*builder.redirectErrorStream(true);
+			builder.redirectErrorStream(true);
 			Process process = builder.start();
-
-			readProcessOutput(process.getInputStream(), System.out);*/
-			System.out.println("截取成功");
+			//readProcessOutput(process.getInputStream(), System.out);	//cmd執行結果(debug用)
+			process.waitFor();	
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
