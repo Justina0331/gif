@@ -72,7 +72,7 @@ public class video2Image {
 		
 		commands.add("-y");			//覆蓋圖片
 		
-		commands.add(imagePath + "\\%d.jpg");
+		commands.add(imagePath + "\\capture%d.jpg");
 
 		try {
 			ProcessBuilder builder = new ProcessBuilder(commands);

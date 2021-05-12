@@ -1,8 +1,15 @@
 package demo.ex;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.MultimediaInfo;
+
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,16 +17,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
+//ç¬¬192è¡Œä¸‹è¼‰!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ANDåœ–ç‰‡é è¦½æˆ‘æ¯«ç„¡é ­ç·’!!!!!!!!!!!!!!!!!!!!!!!!!
 public class vedioGUI {
-	
-	//input startTime¤T®æ¡]®É¡G¤À¡G¬í¡^§Ú¦³©ñ°Ñ¦Ò¹Ï
-	//input endTime
-	//input ¹Ï¤ù±i¼Æ
-	//¶}©lºI¹Ïbutton°õ¦ævideo2Image(ºI¹Ï¼È¦s¦bgif\picture¸ê®Æ§¨¡^
-	//¶}©lgif»s§@button°õ¦æimageGIF(¥¼°õ¦æ¶}©lºI¹Ïbutton´N«ö¶}©lgif»s§@button¡A¦^¶Ç§AÁÙ¨SºI¹Ï¤§Ãşªº¿ù»~)
-	//maybe­nÅã¥ÜºI¹Ïµ²ªG¹wÄı¡A¦ı§Ú¤£ª¾¹D¬O­n¼g¦b³oÁÙ¬Ovideo2Image
-    private JFrame menu; //ªì©l¿ï³æ
+
+	private int vedioLong;//å½±ç‰‡é•·åº¦
+    private JFrame menu; //åˆå§‹é¸å–®
     private JPanel inputPanel;
     private JTextField startHour;
     private JTextField startMinute;
@@ -30,58 +37,73 @@ public class vedioGUI {
     private JTextField num;
     private int[] startTime = new int[3];
     private int[] endTime = new int[3];
-    private int imageNum;
-    private JButton start;        //¶}©l»s§@gif
-    private JButton capture;      //¶}©lºI¹Ï
-    private JButton downLoad;     //¤U¸ü
-    private boolean correctTime;  //¬O§_¿ï¾Ü¥¿½T®É¶¡
-    private boolean correctNum;   //¬O§_¿ï¾Ü¥¿½T½d³ò¼Æ¶q(2~10)
+    private int imageNum;		  
+    private JButton start;        //é–‹å§‹è£½ä½œgif
+    private JButton capture;      //é–‹å§‹æˆªåœ–
+    private JButton downLoad;     //ä¸‹è¼‰
+    private boolean correctTime;  //æ˜¯å¦é¸æ“‡æ­£ç¢ºæ™‚é–“
+    private boolean correctNum;   //æ˜¯å¦é¸æ“‡æ­£ç¢ºç¯„åœæ•¸é‡(2~10)
     private video2Image doVideo;
 
     //Creates new form makingGIF
     public vedioGUI(File fileVideo) {
+    	Encoder encoder = new Encoder();
+    	try {
+    		MultimediaInfo m = encoder.getInfo(fileVideo);
+    		vedioLong = (int)m.getDuration()/1000;
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     	doVideo = new video2Image(fileVideo);
     	initComponents();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void initComponents() {
     	
-    	//µøµ¡³]©w
+    	//è¦–çª—è¨­å®š
         menu = new JFrame("vedio");
         menu.setLocationByPlatform(true);
         menu.setSize(800, 600);
         menu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         menu.setLayout(null);		
              
-        //µøµ¡¥[¤J¼ĞÃD
-        JLabel titleLabel = new JLabel("½Ğ¿ï¾ÜºI¹Ï®É¶¡¤Î±i¼Æ(2~10)", JLabel.CENTER);
+        //è¦–çª—åŠ å…¥æ¨™é¡Œ
+        JLabel titleLabel = new JLabel("è«‹é¸æ“‡æˆªåœ–æ™‚é–“åŠå¼µæ•¸(2~10)", JLabel.CENTER);
         titleLabel.setBounds(180,70,400,50);
-        titleLabel.setFont(new java.awt.Font("Dialog", 1, 30));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 30));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         menu.add(titleLabel);      
         
-    	//input­±ªO
+    	//inputé¢æ¿
         inputPanel = new JPanel();
         inputPanel.setBounds(220,200,320,170);
         
-        //®É¤À¬íLabel
-        JLabel hourLabel = new JLabel("®É");
-        hourLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
-        JLabel minuteLabel = new JLabel("¤À");
-        minuteLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
-        JLabel secondLabel = new JLabel("¬í");
-        secondLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        //æ™‚åˆ†ç§’Label
+        JLabel hourLabel = new JLabel("æ™‚");
+        hourLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
+        JLabel minuteLabel = new JLabel("åˆ†");
+        minuteLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
+        JLabel secondLabel = new JLabel("ç§’");
+        secondLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         
-        //¶}©l®É¶¡Label
-        JLabel startTimeLabel = new JLabel("¶}©l®É¶¡", JLabel.LEFT);
+        //é–‹å§‹æ™‚é–“Label
+        JLabel startTimeLabel = new JLabel("é–‹å§‹æ™‚é–“", JLabel.LEFT);
         startTimeLabel.setBounds(0,0,200,50);
-        startTimeLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        startTimeLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         inputPanel.add(startTimeLabel);
         
-        //¶}©l®É¶¡¿é¤J
-        startHour = new JTextField("0", 3);
-        startMinute = new JTextField("0", 3); 
-        startSecond = new JTextField("1", 3);
+        //é–‹å§‹æ™‚é–“è¼¸å…¥
+        startHour = new JTextField(3);
+        startHour.setDocument(new LimitedDocument(2,24,startHour));		//è¼¸å…¥é•·åº¦åŠå‹æ…‹è¨­å®š
+        startHour.addFocusListener(new CustomFocusListener(startHour, "0"));	//é»˜èªè¼¸å…¥
+        
+        startMinute = new JTextField(3);
+        startMinute.setDocument(new LimitedDocument(2,59,startMinute));
+        startMinute.addFocusListener(new CustomFocusListener(startMinute, "0"));
+        
+        startSecond = new JTextField(3);
+        startSecond.setDocument(new LimitedDocument(2,59, startSecond));
+        startSecond.addFocusListener(new CustomFocusListener(startSecond, "1"));
+        
         inputPanel.add(startHour);
         inputPanel.add(hourLabel);
         inputPanel.add(startMinute);
@@ -89,24 +111,33 @@ public class vedioGUI {
         inputPanel.add(startSecond);
         inputPanel.add(secondLabel);
         
-        //®É¤À¬íLabel
-        JLabel hourLabel1 = new JLabel("®É");
-        hourLabel1.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
-        JLabel minuteLabel1 = new JLabel("¤À");
-        minuteLabel1.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
-        JLabel secondLabel1 = new JLabel("¬í");
-        secondLabel1.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        //æ™‚åˆ†ç§’Label
+        JLabel hourLabel1 = new JLabel("æ™‚");
+        hourLabel1.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
+        JLabel minuteLabel1 = new JLabel("åˆ†");
+        minuteLabel1.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
+        JLabel secondLabel1 = new JLabel("ç§’");
+        secondLabel1.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         
-        //µ²§ô®É¶¡Label
-        JLabel endTimeLabel = new JLabel("µ²§ô®É¶¡", JLabel.LEFT);
+        //çµæŸæ™‚é–“Label
+        JLabel endTimeLabel = new JLabel("çµæŸæ™‚é–“", JLabel.LEFT);
         endTimeLabel.setBounds(0,0,200,50);
-        endTimeLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        endTimeLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         inputPanel.add(endTimeLabel);
         
-        //µ²§ô®É¶¡¿é¤J
-        endHour = new JTextField("0", 3);
-        endMinute = new JTextField("0", 3); 
-        endSecond = new JTextField("1", 3);
+        //çµæŸæ™‚é–“è¼¸å…¥
+        endHour = new JTextField(3);
+        endHour.setDocument(new LimitedDocument(2,24,endHour));
+        endHour.addFocusListener(new CustomFocusListener(endHour, "0"));
+        
+        endMinute = new JTextField(3); 
+        endMinute.setDocument(new LimitedDocument(2,59,endMinute));
+        endMinute.addFocusListener(new CustomFocusListener(endMinute, "0"));
+        
+        endSecond = new JTextField(3);
+        endSecond.setDocument(new LimitedDocument(2,59,endSecond));
+        endSecond.addFocusListener(new CustomFocusListener(endSecond, "1"));
+        
         inputPanel.add(endHour);
         inputPanel.add(hourLabel1);
         inputPanel.add(endMinute);
@@ -114,56 +145,56 @@ public class vedioGUI {
         inputPanel.add(endSecond);
         inputPanel.add(secondLabel1);
         
-        //ºI¹Ï±i¼ÆLabel
-        JLabel imageNumLabel = new JLabel("ºI¹Ï¼Æ¶q(2~10)", JLabel.LEFT);
+        //æˆªåœ–å¼µæ•¸Label
+        JLabel imageNumLabel = new JLabel("æˆªåœ–æ•¸é‡(2~10)", JLabel.LEFT);
         imageNumLabel.setBounds(0,0,200,50);
-        imageNumLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        imageNumLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         inputPanel.add(imageNumLabel);
         
-        //ºI¹Ï±i¼Æ¿é¤J
+        //æˆªåœ–å¼µæ•¸è¼¸å…¥
         num = new JTextField("2", 3);   
         inputPanel.add(num);
         
-        //ºI¹ÏButton
-        capture = new JButton("ºI¹Ï");
+        //æˆªåœ–Button
+        capture = new JButton("æˆªåœ–");
         capture.setFont(new java.awt.Font("Dialog", 1, 30));
         capture.setBounds(40,380,200,100);
         
-        //¶}©lgifButton
-        start = new JButton("»s§@gif");
+        //é–‹å§‹gifButton
+        start = new JButton("è£½ä½œgif");
         start.setFont(new java.awt.Font("Dialog", 1, 30));
         start.setBounds(290,380,200,100);
         start.setEnabled(false);
         
-        //¤U¸üButton
-        downLoad = new JButton("¤U¸ü¹Ï¤ù");
+        //ä¸‹è¼‰Button
+        downLoad = new JButton("ä¸‹è¼‰åœ–ç‰‡");
         downLoad.setFont(new java.awt.Font("Dialog", 1, 30));
         downLoad.setBounds(540,380,200,100);
         downLoad.setEnabled(false);
 
-        //panel©Mbutton¥[¤Jµøµ¡
+        //panelå’ŒbuttonåŠ å…¥è¦–çª—
         menu.add(inputPanel);
         menu.add(capture);
         menu.add(start);
         menu.add(downLoad);
         menu.setVisible(true);
         
-        //capture button«ö¤U«á°õ¦æ
+        //capture buttonæŒ‰ä¸‹å¾ŒåŸ·è¡Œ
         capture.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
-                //¶}©l½sÄ¶
-            	checkType(e);
+                //é–‹å§‹ç·¨è­¯
+            	checkTime(e);
             }
         });
         
-        //downLoad button«ö¤U«á°õ¦æ
+        //downLoad buttonæŒ‰ä¸‹å¾ŒåŸ·è¡Œ
         downLoad.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
-                //TODO
+            	//å¹«æˆ‘æŠŠpictureè³‡æ–™å¤¾çš„capture1~captureImageNumä¸‹è¼‰åˆ°ä½¿ç”¨è€…é¸æ“‡çš„è³‡æ–™å¤¾
             }
         });
         
-        //start button«ö¤U«á°õ¦æ
+        //start buttonæŒ‰ä¸‹å¾ŒåŸ·è¡Œ
         start.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
             	menu.setVisible(false);
@@ -173,43 +204,123 @@ public class vedioGUI {
         
     }
     
-    private void checkType(ActionEvent e1) {
-    	//±N¿é¤JÂà¬°¼Æ¦r
-    	try {
-	    	startTime[0] = Integer.parseInt(startHour.getText());
-	    	startTime[1] = Integer.parseInt(startMinute.getText());
-	    	startTime[2] = Integer.parseInt(startSecond.getText());
-	    	endTime[0] = Integer.parseInt(endHour.getText());
-	    	endTime[1] = Integer.parseInt(endMinute.getText());
-	    	endTime[2] = Integer.parseInt(endSecond.getText());
-	    	imageNum = Integer.parseInt(num.getText());
-	    	checkRange(e1);
-    	} catch(Exception e){	//³B²z­Y¨Ï¥ÎªÌ¿é¤Jªº¤£¬O¼Æ¦r
-    		JOptionPane.showMessageDialog(menu,"½Ğ¿é¤J¼Æ¦r!");
+    //åˆ¤æ–·inputå€¼ï¼Œé™åˆ¶è¼¸å‡ºçš„ç•«é¢é•·åº¦åŠå‹æ…‹
+    @SuppressWarnings("serial")
+    class LimitedDocument extends PlainDocument {
+
+		private int _maxLength  = -1;
+		private int _maxValue = 0; // æœ€å¤§å€¼é™åˆ¶
+        private String _allowCharAsString = "0123456789";
+        private JTextField F;
+     
+        public LimitedDocument(int maxLength, int maxValue, JTextField F){
+            super();
+            this._maxLength = maxLength;
+            this._maxValue = maxValue;
+            this.F = F;
+        }
+     
+        public void insertString(int offset, String str, AttributeSet attrSet) throws BadLocationException{
+            if(str == null)
+                return;
+            if(_allowCharAsString != null && str.length() == 1) {
+                if(_allowCharAsString.indexOf(str) == -1)
+                    return;
+            }
+            char[] charVal = str.toCharArray();
+            String strOldValue = getText(0, getLength());
+            byte[] tmp = strOldValue.getBytes();
+            if(_maxLength != -1 && (tmp.length + charVal.length > _maxLength)){
+            	F.setText(Integer.toString(_maxValue));
+                return;
+            }
+            
+            String s = this.getText(0, this.getLength());
+            s = s.substring(0, offset) + str + s.substring(offset, s.length());
+            if (Double.parseDouble(s) > _maxValue) {
+            	F.setText(Integer.toString(_maxValue));
+            	return;
+            }
+            super.insertString(offset, str, attrSet);
+        }
+    }
+    
+    //åˆ¤æ–·ä½¿ç”¨è€…æœ‰æ²’æœ‰inputï¼Œæœªè¼¸å…¥çµ¦äºˆé è¨­å€¼
+    class CustomFocusListener implements FocusListener {
+    	
+    	private String hintText;
+    	private JTextField textField;
+    	public CustomFocusListener(JTextField jTextField,String hintText) {
+    		this.textField = jTextField;
+    		this.hintText = hintText;
+    		jTextField.setText(hintText);  //é»˜èªæç¤ºå…§å®¹
+    		jTextField.setForeground(Color.GRAY);
+    	}
+     
+    	@Override
+    	public void focusGained(FocusEvent e) {
+    		//ä½¿ç”¨è€…è‹¥æœ‰è¼¸å…¥ï¼Œæ¸…ç©ºæç¤ºå†…å®¹
+    		String temp = textField.getText();
+    		if(temp.equals(hintText)) {
+    			textField.setText("");
+    			textField.setForeground(Color.BLACK);
+    		}	
+    	}
+     
+    	@Override
+    	public void focusLost(FocusEvent e) {	
+    		//å¤±å»è¼¸å…¥å…§å®¹æ™‚ï¼Œé¡¯ç¤ºæç¤ºå…§å®¹
+    		String temp = textField.getText();
+    		if(temp.equals("")) {
+    			textField.setForeground(Color.GRAY);
+    			textField.setText(hintText);
+    		}
+    		
     	}
 
     }
     
-    private void checkRange(ActionEvent e2) {
-	    //TODO §PÂ_¼v¤ù½d³ò¸ò±i¼Æ½d³ò
-    	correctTime = true;
-    	correctNum = true;
+    private void checkTime(ActionEvent e2) {
+    	
+    	//å°‡textå­—ä¸²è½‰ç‚ºæ•¸å­—
+    	startTime[0] = Integer.parseInt(startHour.getText());
+    	startTime[1] = Integer.parseInt(startMinute.getText());
+    	startTime[2] = Integer.parseInt(startSecond.getText());
+    	endTime[0] = Integer.parseInt(endHour.getText());
+    	endTime[1] = Integer.parseInt(endMinute.getText());
+    	endTime[2] = Integer.parseInt(endSecond.getText());
+    	imageNum = Integer.parseInt(num.getText());
+    	
+    	//åˆ¤æ–·æ™‚é–“æœ‰æ²’æœ‰æ­£ç¢º
+    	int endTimeSecond = endTime[0] * 60 * 60 + endTime[1] * 60 + endTime[2];
+    	int startTimeSecond = startTime[0] * 60 * 60 + startTime[1] * 60 + startTime[2];
+    	int stayTime = endTimeSecond - startTimeSecond + 1;
+    	if(stayTime <= 0 || endTimeSecond > vedioLong || startTimeSecond > vedioLong)
+    		correctTime = false;
+    	else 
+    		correctTime = true;
+    	
+    	//åˆ¤æ–·å¼µæ•¸æœ‰æ²’æœ‰æ­£ç¢º
+    	if(imageNum > 10 || imageNum < 2)
+    		correctNum = false;
+    	else
+    		correctNum = true;
+    	
 	    startPerformed(e2);
     }
 
-
     private void startPerformed(ActionEvent e3) {
-        //½T»{°T®§
-        if(!correctTime & !correctNum){//®É¶¡&¼Æ¶q³£¿ù»~>>¿ù»~°T®§
-           JOptionPane.showMessageDialog(menu,"½Ğ¿é¤J¥¿½T®É¶¡¤Î±i¼Æ(2~10)!");
+        //ç¢ºèªè¨Šæ¯
+        if(!correctTime & !correctNum){//æ™‚é–“&æ•¸é‡éƒ½éŒ¯èª¤>>éŒ¯èª¤è¨Šæ¯
+           JOptionPane.showMessageDialog(menu,"è«‹è¼¸å…¥æ­£ç¢ºæ™‚é–“åŠæ•¸é‡(2~10)!");
         }
-        else if(correctTime & !correctNum){//¼Æ¶q¿ï¾Ü¿ù»~>>¿ù»~°T®§
-            JOptionPane.showMessageDialog(menu,"½Ğ¿é¤J¥¿½T¼Æ¶q(2~10)!");
+        else if(correctTime & !correctNum){//æ•¸é‡é¸æ“‡éŒ¯èª¤>>éŒ¯èª¤è¨Šæ¯
+            JOptionPane.showMessageDialog(menu,"è«‹è¼¸å…¥æ­£ç¢ºæ•¸é‡(2~10)!");
         }
-        else if(!correctTime & correctNum){//®É¶¡¿ï¾Ü¿ù»~>>¿ù»~°T®§
-        	JOptionPane.showMessageDialog(menu,"½Ğ¿é¤J¥¿½T®É¶¡!");
+        else if(!correctTime & correctNum){//æ™‚é–“é¸æ“‡éŒ¯èª¤>>éŒ¯èª¤è¨Šæ¯
+        	JOptionPane.showMessageDialog(menu,"è«‹è¼¸å…¥æ­£ç¢ºæ™‚é–“!");
         }
-        else if(correctTime & correctNum){//¿ï¤F¥¿½Tªº¼v­µÀÉ>>©I¥sdoVideo.captureScreen()
+        else if(correctTime & correctNum){//é¸äº†æ­£ç¢ºçš„å½±éŸ³æª”>>å‘¼å«doVideo.captureScreen()
         	doVideo.captureScreen(startTime[0], startTime[1], startTime[2], endTime[0], endTime[1], endTime[2], imageNum);
         	downLoad.setEnabled(true);
         	start.setEnabled(true);
