@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.MultimediaInfo;
@@ -190,7 +191,15 @@ public class vedioGUI {
         //downLoad button按下後執行
         downLoad.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
-            	//幫我把picture資料夾的capture1~captureImageNum下載到使用者選擇的資料夾
+            	//把picture資料夾的capture1~captureImageNum下載到C:\\capturePictures
+            	for(int i = 1;i <= imageNum;i++) {
+            		File tempImage = new File("picture\\capture" + i + ".jpg");
+            		try {
+						downloadCapturePictures execute = new downloadCapturePictures(tempImage);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+            	}
             }
         });
         
