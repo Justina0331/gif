@@ -240,11 +240,8 @@ public class makingGIF {
                 sb.append(file.getName());
             }
             JOptionPane.showMessageDialog(menu,sb);
-            //TODO
-            image2GIF editPictures = new  image2GIF(filePictures);  //之後修改成傳整個File[]
-            editPictures.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            editPictures.setSize(260, 180);
-            editPictures.setVisible(true);
+            
+            imageGUI editPictures = new  imageGUI(filePictures); 
             menu.setVisible(false);
 
         }
