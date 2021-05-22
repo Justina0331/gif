@@ -13,11 +13,14 @@ import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.MultimediaInfo;
 
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.FocusEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -49,6 +52,7 @@ public class vedioGUI {
     private boolean correctTime;  //是否選擇正確時間
     private boolean correctNum;   //是否選擇正確範圍數量(2~10)
     private video2Image doVideo;
+    private JButton[] chooseImage;
 
     //Creates new form makingGIF
     public vedioGUI(File fileVideo) {
@@ -203,6 +207,16 @@ public class vedioGUI {
             	picturePanel.removeAll();
             	checkTime(e);
             	viewPicture();
+            	for(JButton j : chooseImage) {	//截圖後可選取要用的圖片
+        	        j.addMouseListener(new MouseAdapter() { 
+        	            public void mousePressed(MouseEvent e) { 
+        	            	if(j.getBackground().getRGB() == -20561) 
+        	            		j.setBackground(Color.WHITE);
+        	            	else 
+        	            		j.setBackground(Color.PINK);
+        	            } 
+        	        });
+                }
             }
         });
         
@@ -210,35 +224,50 @@ public class vedioGUI {
         downLoad.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
             	//把picture資料夾的capture1~captureImageNum下載到C:\\capturePictures
+            	boolean doDoenload = false;
             	for(int i = 1;i <= imageNum;i++) {
-            		File tempImage = new File("picture\\capture" + i + ".jpg");
-            		try {
-						new downloadCapturePictures(tempImage);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+            		if(chooseImage[i - 1].getBackground().getRGB() == -20561) {
+            			File tempImage = new File("picture\\capture" + i + ".jpg");
+	            		try {
+							new downloadCapturePictures(tempImage);
+							doDoenload = true;
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+            		}
             	}
+            	if(doDoenload == false)
+            		JOptionPane.showMessageDialog(menu,"未選取任何要下載的圖片!");
             }
         });
         
         //start button按下後執行
         start.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
-            	int k = 1;
+            	int chooseNum = 0;
             	File image = new File("picture");
         		String imagePath = image.getAbsolutePath(); //圖片暫存位置
-            	File[] filePictures = new File[imageNum];     //紀錄選取的圖片檔
-            	for(int i = 0; i < imageNum; i++) {
-            		filePictures[i] = new File(imagePath + "\\capture" + k + ".jpg");
-            		k++;
-            	} 
+        		
+            	for(int i = 1; i <= imageNum; i++) {	//先算選取多少圖片
+	            	if(chooseImage[i - 1].getBackground().getRGB() == -20561) {
+	            		chooseNum++;
+	        		}
+            	}
+            	if(chooseNum < 2) {	//若選取不到兩張則打印錯誤訊息並return
+            		JOptionPane.showMessageDialog(menu,"請選取至少兩張圖片!");
+            		return;
+            	}
+            	File[] filePictures = new File[chooseNum];     //給定File大小
             	
+            	chooseNum = 0;	//給予完大小再歸0
+            	for(int i = 1; i <= imageNum; i++) {	//將有選取的圖片加入File
+            		if(chooseImage[i - 1].getBackground().getRGB() == -20561) {
+	            		filePictures[chooseNum] = new File(imagePath + "\\capture" + i + ".jpg");
+	            		chooseNum++;
+            		}
+            	} 
             	menu.setVisible(false);
-            	image2GIF editPictures = new image2GIF(filePictures);
-                editPictures.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                editPictures.setSize(1200, 800);
-                editPictures.setVisible(true);
-                menu.setVisible(false);
+	            new imageGUI(filePictures);
             }
         });
         
@@ -246,33 +275,36 @@ public class vedioGUI {
     
     private void viewPicture() {
     	int k = 1;
-    	int width = 220, height = 180;
+    	int width = 200, height = 160;
     	
     	File image = new File("picture");
 		String imagePath = image.getAbsolutePath(); //圖片暫存位置
+		chooseImage = new JButton[imageNum];
 		
     	ArrayList<ImageIcon> imgIcon = new ArrayList<ImageIcon>();
-    	ArrayList<JLabel> jlb = new ArrayList<JLabel>();
     	
     	for(int i = 0; i < imageNum; i++) {
     		imgIcon.add(new ImageIcon(imagePath + "\\capture" + k + ".jpg"));
     		k++;
     	}
     	
+    	k = 0;
     	for (ImageIcon picture : imgIcon) {
             Image pic = picture.getImage().getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);   //設置圖片大小
             ImageIcon picAdjust = new ImageIcon(pic);
-            JLabel j = new JLabel();
+            JButton j = new JButton();
+            j.setBorderPainted(false);
             j.setIcon(picAdjust);
-            jlb.add(j);
+            chooseImage[k] = j;
+            k++;
         }
     	
-    	for(JLabel j : jlb)
+    	for(JButton j : chooseImage)
     		picturePanel.add(j);
     	
     	menu.add(picturePanel);
     	
-    	for(JLabel j : jlb)
+    	for(JButton j : chooseImage)
     		j.setSize(width, height);
     	
     	menu.setVisible(true);
