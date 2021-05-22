@@ -4,51 +4,49 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class imageGUI {
-	private JFrame menu; //ªì©l¿ï³æ
-    private JPanel panel;   //¹Ï¤ù°Ï
-    private JLabel label;   
-    private JButton start;            //±±¨î¶}©l½sÄ¶
+    private JFrame menu; //åˆå§‹é¸å–®
+    private JPanel panel;   //åœ–ç‰‡å€
+    private JLabel label;
+    private JButton start;            //æ§åˆ¶é–‹å§‹ç·¨è­¯
 
     //Creates new form makingGIF
     public imageGUI() {
-    	initComponents();
+        initComponents();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void initComponents() {
-        menu = new JFrame("image");	//µøµ¡
+        menu = new JFrame("image");	//è¦–çª—
         menu.setLocationByPlatform(true);
         menu.setSize(800, 600);
         menu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        menu.setLayout(null);			
-                    
-        label = new JLabel("Åwªï¨Ó¨ì«F«FTODO", JLabel.CENTER);
+        menu.setLayout(null);
+
+        label = new JLabel("æ­¡è¿ä¾†åˆ°äº­äº­TODO", JLabel.CENTER);
         label.setBounds(170,70,400,50);
-        label.setFont(new java.awt.Font("Dialog", 1, 40));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
-        menu.add(label);                     
-       
-        start = new JButton("¶}©l");
+        label.setFont(new java.awt.Font("Dialog", 1, 40));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
+        menu.add(label);
+
+        start = new JButton("é–‹å§‹");
         start.setFont(new java.awt.Font("Dialog", 1, 40));
 
-        panel = new JPanel();	//­±ªO
-        panel.setBorder(javax.swing.BorderFactory.createTitledBorder("½Æ¼Æ¹Ï¤ùÀÉ"));
+        panel = new JPanel();	//é¢æ¿
+        panel.setBorder(javax.swing.BorderFactory.createTitledBorder("è¤‡æ•¸åœ–ç‰‡æª”"));
 
         start.setBounds(290,380,180,100);
-                    
+
         menu.add(panel);
         menu.add(start);
         menu.setVisible(true);
 
-        start.addActionListener(new ActionListener(){ 
-            public void actionPerformed(ActionEvent e){ 
-                //¶}©l½sÄ¶
+        start.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //é–‹å§‹ç·¨è­¯
                 startPerformed(e);
             }
         });
@@ -56,6 +54,6 @@ public class imageGUI {
 
 
     private void startPerformed(java.awt.event.ActionEvent evt) {
-        
+
     }
 }

@@ -14,113 +14,113 @@ import javax.swing.filechooser.FileSystemView;
 public class makingGIF {
     private JFileChooser fileChooser;
     private FileNameExtensionFilter filter;
-    private File[] filePictures;     //¬ö¿ı¿ï¨úªº¹Ï¤ùÀÉ
-    private File fileVideo;     //¬ö¿ı¿ï¨úªº¼v­µÀÉ
-    private int fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES;  //¿ï¾Ü¼Ò¦¡:ÀÉ®×©Î¥Ø¿ı
-    private JFrame menu; //ªì©l¿ï³æ
-    private JPanel panel;   //¹Ï¤ù°Ï
-    private JPanel panel2;  //¼v­µ°Ï
-    private JLabel label;   
-    private JLabel labelPictures;      //Åã¥Ü¬O§_¤W¶Ç¹Ï¤ù
-    private JLabel labelVideo;  //Åã¥Ü¬O§_¤W¶Ç¼v­µ
-    private JButton uploadPicturesButton;      //±±¨î¤W¶Ç¹Ï¤ù
-    private JButton uploadVideoButton;      //±±¨î¤W¶Ç¼v­µ
-    private JButton removePicturesButton;      //±±¨î²¾°£¹Ï¤ù
-    private JButton removeVideoButton;      //±±¨î²¾°£¼v­µ
-    private JButton start;            //±±¨î¶}©l½sÄ¶
-    private Color DarkSeaGreen = new Color(143,188,143);  //²`®ü¬vºñ
-    private Color SlateGray = new Color(112,128,144);  //¥ÛªO¦Ç
-    private boolean correctPictures;  //¬O§_¿ï¾Ü¹F³Ì§C¼Æ¶q&¥¿½T¹Ï¤ùÀÉ®×Ãş«¬
-    private boolean correctVideo;     //¬O§_¿ï¾Ü¥¿½T¼v­µÀÉ®×Ãş«¬
+    private File[] filePictures;     //ç´€éŒ„é¸å–çš„åœ–ç‰‡æª”
+    private File fileVideo;     //ç´€éŒ„é¸å–çš„å½±éŸ³æª”
+    private int fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES;  //é¸æ“‡æ¨¡å¼:æª”æ¡ˆæˆ–ç›®éŒ„
+    private JFrame menu; //åˆå§‹é¸å–®
+    private JPanel panel;   //åœ–ç‰‡å€
+    private JPanel panel2;  //å½±éŸ³å€
+    private JLabel label;
+    private JLabel labelPictures;      //é¡¯ç¤ºæ˜¯å¦ä¸Šå‚³åœ–ç‰‡
+    private JLabel labelVideo;  //é¡¯ç¤ºæ˜¯å¦ä¸Šå‚³å½±éŸ³
+    private JButton uploadPicturesButton;      //æ§åˆ¶ä¸Šå‚³åœ–ç‰‡
+    private JButton uploadVideoButton;      //æ§åˆ¶ä¸Šå‚³å½±éŸ³
+    private JButton removePicturesButton;      //æ§åˆ¶ç§»é™¤åœ–ç‰‡
+    private JButton removeVideoButton;      //æ§åˆ¶ç§»é™¤å½±éŸ³
+    private JButton start;            //æ§åˆ¶é–‹å§‹ç·¨è­¯
+    private Color DarkSeaGreen = new Color(143,188,143);  //æ·±æµ·æ´‹ç¶ 
+    private Color SlateGray = new Color(112,128,144);  //çŸ³æ¿ç°
+    private boolean correctPictures;  //æ˜¯å¦é¸æ“‡é”æœ€ä½æ•¸é‡&æ­£ç¢ºåœ–ç‰‡æª”æ¡ˆé¡å‹
+    private boolean correctVideo;     //æ˜¯å¦é¸æ“‡æ­£ç¢ºå½±éŸ³æª”æ¡ˆé¡å‹
 
     //Creates new form makingGIF
     public makingGIF() {
-    	initComponents();
+        initComponents();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void initComponents() {
-        menu = new JFrame("makingGIF");	//µøµ¡
+        menu = new JFrame("makingGIF");	//è¦–çª—
         menu.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         menu.setLocationByPlatform(true);
         menu.setSize(800, 600);
         menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        menu.setLayout(null);			
-                    
-        label = new JLabel("Åwªï¨Ï¥ÎmakingGIF", JLabel.CENTER);
-        label.setToolTipText("½Ğ¿ï¾Ü¥H¤U1ºØ§@¬°´C§÷");
+        menu.setLayout(null);
+
+        label = new JLabel("æ­¡è¿ä½¿ç”¨makingGIF", JLabel.CENTER);
+        label.setToolTipText("è«‹é¸æ“‡ä»¥ä¸‹1ç¨®ä½œç‚ºåª’æ");
         label.setBounds(170,70,400,50);
-        label.setFont(new java.awt.Font("Dialog", 1, 40));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        label.setFont(new java.awt.Font("Dialog", 1, 40));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         menu.add(label);
-                    
+
         final JFileChooser file1 = new JFileChooser();
-                            
-        uploadPicturesButton = new JButton("¤W¶Ç");	//«ö¶s
-        uploadVideoButton = new JButton("¤W¶Ç");
-        removePicturesButton = new JButton("²¾°£");	//«ö¶s
-        removeVideoButton = new JButton("²¾°£");
-        start = new JButton("¶}©l");
+
+        uploadPicturesButton = new JButton("ä¸Šå‚³");	//æŒ‰éˆ•
+        uploadVideoButton = new JButton("ä¸Šå‚³");
+        removePicturesButton = new JButton("ç§»é™¤");	//æŒ‰éˆ•
+        removeVideoButton = new JButton("ç§»é™¤");
+        start = new JButton("é–‹å§‹");
         uploadPicturesButton.setFont(new java.awt.Font("Dialog", 1, 30));
         uploadVideoButton.setFont(new java.awt.Font("Dialog", 1, 30));
         removePicturesButton.setFont(new java.awt.Font("Dialog", 1, 30));
         removeVideoButton.setFont(new java.awt.Font("Dialog", 1, 30));
         start.setFont(new java.awt.Font("Dialog", 1, 40));
 
-        panel = new JPanel();	//­±ªO
-        panel.setBorder(javax.swing.BorderFactory.createTitledBorder("½Æ¼Æ¹Ï¤ùÀÉ"));
-        labelPictures = new JLabel("©|¥¼¤W¶Ç¹Ï¤ùÀÉ", JLabel.LEFT);
-        labelPictures.setToolTipText("½Ğ¿ï¾Ü2~10±i¹Ï¤ùÀÉ");
+        panel = new JPanel();	//é¢æ¿
+        panel.setBorder(javax.swing.BorderFactory.createTitledBorder("è¤‡æ•¸åœ–ç‰‡æª”"));
+        labelPictures = new JLabel("å°šæœªä¸Šå‚³åœ–ç‰‡æª”", JLabel.LEFT);
+        labelPictures.setToolTipText("è«‹é¸æ“‡2~10å¼µåœ–ç‰‡æª”");
         labelPictures.setForeground(SlateGray);
-        labelPictures.setFont(new java.awt.Font("Dialog", 1, 30));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        labelPictures.setFont(new java.awt.Font("Dialog", 1, 30));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         panel.add(labelPictures);
         panel.add(uploadPicturesButton);
         panel.add(removePicturesButton);
         panel.setBounds(90,150,240,180);
 
-        panel2 = new JPanel();	//­±ªO
-        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder("¼v­µÀÉ"));
-        labelVideo = new JLabel("©|¥¼¤W¶Ç¼v­µÀÉ", JLabel.LEFT);
-        labelVideo.setToolTipText("½Ğ¿ï¾Ü1­Ó¼v­µÀÉ");
+        panel2 = new JPanel();	//é¢æ¿
+        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder("å½±éŸ³æª”"));
+        labelVideo = new JLabel("å°šæœªä¸Šå‚³å½±éŸ³æª”", JLabel.LEFT);
+        labelVideo.setToolTipText("è«‹é¸æ“‡1å€‹å½±éŸ³æª”");
         labelVideo.setForeground(SlateGray);
-        labelVideo.setFont(new java.awt.Font("Dialog", 1, 30));	//(¦rÅé¡A²ÊÅé¡A¤j¤p)
+        labelVideo.setFont(new java.awt.Font("Dialog", 1, 30));	//(å­—é«”ï¼Œç²—é«”ï¼Œå¤§å°)
         panel2.add(labelVideo);
         panel2.add(uploadVideoButton);
         panel2.add(removeVideoButton);
         panel2.setBounds(430,150,240,180);
 
         start.setBounds(290,380,180,100);
-                    
+
         menu.add(panel);
         menu.add(panel2);
         menu.add(start);
         menu.setVisible(true);
-        uploadPicturesButton.addActionListener(new ActionListener(){ 
-            public void actionPerformed(ActionEvent e){ 
-                //¤W¶Ç¦h±i¹Ï¤ùÀÉ
+        uploadPicturesButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //ä¸Šå‚³å¤šå¼µåœ–ç‰‡æª”
                 uploadPicturesButtonPerformed(e);
             }
         });
-        uploadVideoButton.addActionListener(new ActionListener(){ 
-            public void actionPerformed(ActionEvent e2){ 
-                //¤W¶Ç¼v­µÀÉ
+        uploadVideoButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e2){
+                //ä¸Šå‚³å½±éŸ³æª”
                 uploadVideoButtonPerformed(e2);
             }
         });
-        removePicturesButton.addActionListener(new ActionListener(){ 
-            public void actionPerformed(ActionEvent e){ 
-                //²¾°£¹Ï¤ùÀÉ
+        removePicturesButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //ç§»é™¤åœ–ç‰‡æª”
                 removePicturesButtonPerformed(e);
             }
         });
-        removeVideoButton.addActionListener(new ActionListener(){ 
-            public void actionPerformed(ActionEvent e2){ 
-                //²¾°£¼v­µÀÉ
+        removeVideoButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e2){
+                //ç§»é™¤å½±éŸ³æª”
                 removeVideoButtonPerformed(e2);
             }
         });
-        start.addActionListener(new ActionListener(){ 
-            public void actionPerformed(ActionEvent e3){ 
-                //¶}©l½sÄ¶
+        start.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e3){
+                //é–‹å§‹ç·¨è­¯
                 startPerformed(e3);
             }
         });
@@ -128,84 +128,84 @@ public class makingGIF {
 
     private void uploadPicturesButtonPerformed(java.awt.event.ActionEvent evt) {
         fileChooser = new JFileChooser();
-        //ªì©l¤Æ·í«e¸ô®|
+        //åˆå§‹åŒ–ç•¶å‰è·¯å¾‘
         FileSystemView fsv = FileSystemView.getFileSystemView();
-        File homeFile =fsv.getHomeDirectory();  //³o«K¬OÅª¨ú®à­±¸ô®|ªº¤èªk¤F
+        File homeFile =fsv.getHomeDirectory();  //é€™ä¾¿æ˜¯è®€å–æ¡Œé¢è·¯å¾‘çš„æ–¹æ³•äº†
         fileChooser.setCurrentDirectory(homeFile);
-        //ªì©l¤ÆÀÉ®×¹LÂo¾¹
-        filter = new FileNameExtensionFilter("¹Ï¤ùÀÉ®×", "png", "jpg");
+        //åˆå§‹åŒ–æª”æ¡ˆéæ¿¾å™¨
+        filter = new FileNameExtensionFilter("åœ–ç‰‡æª”æ¡ˆ", "png", "jpg");
         fileChooser.setFileFilter(filter);
-        //ªì©l¤Æ¿ï¾Ü¼Ò¦¡
+        //åˆå§‹åŒ–é¸æ“‡æ¨¡å¼
         fileChooser.setFileSelectionMode(fileSelectionMode);
-        fileChooser.setMultiSelectionEnabled(true);    //¥i½Æ¿ï
-        //¶}±ÒÀÉ®×¿ï¾Ü¾¹
-        int i = fileChooser.showDialog(menu, "¿ï¾Ü");
+        fileChooser.setMultiSelectionEnabled(true);    //å¯è¤‡é¸
+        //é–‹å•Ÿæª”æ¡ˆé¸æ“‡å™¨
+        int i = fileChooser.showDialog(menu, "é¸æ“‡");
         if(i == JFileChooser.APPROVE_OPTION){
             this.filePictures = fileChooser.getSelectedFiles();
-            if(filePictures.length >= 2 & filePictures.length <= 10){ //ÀË¬d¤W¶Ç¤§±i¼Æ
+            if(filePictures.length >= 2 & filePictures.length <= 10){ //æª¢æŸ¥ä¸Šå‚³ä¹‹å¼µæ•¸
                 for (File file : this.filePictures) {
                     String fileType = file.getName().substring(file.getName().lastIndexOf("."));
-                    if(!fileType.equals(".png") & !fileType.equals(".jpg")){ //ÀË¬d¤W¶Ç¤§ÀÉ®×Ãş«¬ 
+                    if(!fileType.equals(".png") & !fileType.equals(".jpg")){ //æª¢æŸ¥ä¸Šå‚³ä¹‹æª”æ¡ˆé¡å‹
                         correctPictures = false;
                         break;
                     }
                     else{
-                          correctPictures = true;
+                        correctPictures = true;
                     }
                 }
             }
             else{
                 correctPictures = false;
             }
-            if(correctPictures){        //³qª¾¨Ï¥ÎªÌ¤w¥¿½T¿ï¨úor»İ­«·s¿ï¨ú
-                labelPictures.setText("¤w¿ï¨úÀÉ®×");
-                labelPictures.setForeground(DarkSeaGreen);    
+            if(correctPictures){        //é€šçŸ¥ä½¿ç”¨è€…å·²æ­£ç¢ºé¸å–oréœ€é‡æ–°é¸å–
+                labelPictures.setText("å·²é¸å–æª”æ¡ˆ");
+                labelPictures.setForeground(DarkSeaGreen);
             }
             else{
-                labelPictures.setText("¥¼¤W¶Ç¥¿½TÀÉ®×");
-                JOptionPane.showMessageDialog(menu,"±i¼Æ©ÎÃş«¬¿ù»~\n½Ğ­«·s¿ï¾Ü!");
-                labelPictures.setForeground(Color.RED);    
+                labelPictures.setText("æœªä¸Šå‚³æ­£ç¢ºæª”æ¡ˆ");
+                JOptionPane.showMessageDialog(menu,"å¼µæ•¸æˆ–é¡å‹éŒ¯èª¤\nè«‹é‡æ–°é¸æ“‡!");
+                labelPictures.setForeground(Color.RED);
             }
         }
     }
 
     private void uploadVideoButtonPerformed(java.awt.event.ActionEvent evt) {
         fileChooser = new JFileChooser();
-        //ªì©l¤Æ·í«e¸ô®|
+        //åˆå§‹åŒ–ç•¶å‰è·¯å¾‘
         FileSystemView fsv = FileSystemView.getFileSystemView();
-        File homeFile =fsv.getHomeDirectory();  //³o«K¬OÅª¨ú®à­±¸ô®|ªº¤èªk¤F
+        File homeFile =fsv.getHomeDirectory();  //é€™ä¾¿æ˜¯è®€å–æ¡Œé¢è·¯å¾‘çš„æ–¹æ³•äº†
         fileChooser.setCurrentDirectory(homeFile);
-        //ªì©l¤ÆÀÉ®×¹LÂo¾¹
-        filter = new FileNameExtensionFilter("µø°TÀÉ®×", "mp4", "mkv");
+        //åˆå§‹åŒ–æª”æ¡ˆéæ¿¾å™¨
+        filter = new FileNameExtensionFilter("è¦–è¨Šæª”æ¡ˆ", "mp4", "mkv");
         fileChooser.setFileFilter(filter);
-        //ªì©l¤Æ¿ï¾Ü¼Ò¦¡
+        //åˆå§‹åŒ–é¸æ“‡æ¨¡å¼
         fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES;
         fileChooser.setFileSelectionMode(fileSelectionMode);
-        fileChooser.setMultiSelectionEnabled(false);  //¥u¯à³æ¿ï
-        //¶}±ÒÀÉ®×¿ï¾Ü¾¹
-        int i = fileChooser.showDialog(menu, "¿ï¾Ü");
+        fileChooser.setMultiSelectionEnabled(false);  //åªèƒ½å–®é¸
+        //é–‹å•Ÿæª”æ¡ˆé¸æ“‡å™¨
+        int i = fileChooser.showDialog(menu, "é¸æ“‡");
         if(i == JFileChooser.APPROVE_OPTION){
             this.fileVideo = fileChooser.getSelectedFile();
-            if(fileVideo != null){ //ÀË¬d¬O§_¤W¶Ç
+            if(fileVideo != null){ //æª¢æŸ¥æ˜¯å¦ä¸Šå‚³
                 String fileType = fileVideo.getName().substring(fileVideo.getName().lastIndexOf("."));
-                if(!fileType.equals(".mp4") & !fileType.equals(".mkv")){ //ÀË¬d¤W¶Ç¤§ÀÉ®×Ãş«¬ 
+                if(!fileType.equals(".mp4") & !fileType.equals(".mkv")){ //æª¢æŸ¥ä¸Šå‚³ä¹‹æª”æ¡ˆé¡å‹
                     correctVideo = false;
                 }
                 else{
-                         correctVideo = true;
+                    correctVideo = true;
                 }
             }
             else{
                 correctVideo = false;
             }
-            if(correctVideo){        //³qª¾¨Ï¥ÎªÌ¤w¥¿½T¿ï¨úor»İ­«·s¿ï¨ú
-                labelVideo.setText("¤w¿ï¨úÀÉ®×");
-                labelVideo.setForeground(DarkSeaGreen);    
+            if(correctVideo){        //é€šçŸ¥ä½¿ç”¨è€…å·²æ­£ç¢ºé¸å–oréœ€é‡æ–°é¸å–
+                labelVideo.setText("å·²é¸å–æª”æ¡ˆ");
+                labelVideo.setForeground(DarkSeaGreen);
             }
             else{
-                labelVideo.setText("¥¼¤W¶Ç¥¿½TÀÉ®×");
-                JOptionPane.showMessageDialog(menu,"Ãş«¬¿ù»~\n½Ğ­«·s¿ï¾Ü!");
-                labelVideo.setForeground(Color.RED);    
+                labelVideo.setText("æœªä¸Šå‚³æ­£ç¢ºæª”æ¡ˆ");
+                JOptionPane.showMessageDialog(menu,"é¡å‹éŒ¯èª¤\nè«‹é‡æ–°é¸æ“‡!");
+                labelVideo.setForeground(Color.RED);
             }
         }
     }
@@ -213,53 +213,58 @@ public class makingGIF {
     private void removePicturesButtonPerformed(java.awt.event.ActionEvent evt) {
         filePictures = null;
         correctPictures = false;
-        labelPictures.setText("©|¥¼¤W¶Ç¹Ï¤ùÀÉ");
-        labelPictures.setForeground(SlateGray);    
+        labelPictures.setText("å°šæœªä¸Šå‚³åœ–ç‰‡æª”");
+        labelPictures.setForeground(SlateGray);
     }
 
     private void removeVideoButtonPerformed(java.awt.event.ActionEvent evt) {
         fileVideo = null;
         correctVideo = false;
-        labelVideo.setText("©|¥¼¤W¶Ç¼v­µÀÉ");
-        labelVideo.setForeground(SlateGray); 
+        labelVideo.setText("å°šæœªä¸Šå‚³å½±éŸ³æª”");
+        labelVideo.setForeground(SlateGray);
     }
 
     private void startPerformed(java.awt.event.ActionEvent evt) {
-        //½T»{°T®§
-        if(!correctPictures & !correctVideo){//¹Ï¤ù&¼v­µ³£¨S¿ï>>¿ù»~°T®§
-           JOptionPane.showMessageDialog(menu,"½Ğ¦Ü¤Ö¥¿½T¤W¶Ç¤@¶µ´C§÷!");
+        //ç¢ºèªè¨Šæ¯
+        if(!correctPictures & !correctVideo){//åœ–ç‰‡&å½±éŸ³éƒ½æ²’é¸>>éŒ¯èª¤è¨Šæ¯
+            JOptionPane.showMessageDialog(menu,"è«‹è‡³å°‘æ­£ç¢ºä¸Šå‚³ä¸€é …åª’æ!");
         }
-        else if(correctPictures & correctVideo){//¹Ï¤ù&¼v­µ³£¿ï¤F>>¿ù»~°T®§
-            JOptionPane.showMessageDialog(menu,"¤£¥i¨â¶µ¬Ò¿ï\n½Ğ²M°£¤@¶µ´C§÷!");
+        else if(correctPictures & correctVideo){//åœ–ç‰‡&å½±éŸ³éƒ½é¸äº†>>éŒ¯èª¤è¨Šæ¯
+            JOptionPane.showMessageDialog(menu,"ä¸å¯å…©é …çš†é¸\nè«‹æ¸…é™¤ä¸€é …åª’æ!");
         }
-        else if(correctPictures & !correctVideo){//¿ï¤F¥¿½Tªº¹Ï¤ùÀÉ>>©I¥simageGUI
-            StringBuilder sb = new StringBuilder("±z¿ï¾ÜªºÀÉ®×¤À§O¬O¡G");
+        else if(correctPictures & !correctVideo){//é¸äº†æ­£ç¢ºçš„åœ–ç‰‡æª”>>å‘¼å«imageGUI
+            StringBuilder sb = new StringBuilder("æ‚¨é¸æ“‡çš„æª”æ¡ˆåˆ†åˆ¥æ˜¯ï¼š");
             sb.append("\n");
             for (File file : this.filePictures) {
                 sb.append("\n");
                 sb.append(file.getName());
-             }
+            }
             JOptionPane.showMessageDialog(menu,sb);
             //TODO
+            image2GIF editPictures = new  image2GIF(filePictures);  //ä¹‹å¾Œä¿®æ”¹æˆå‚³æ•´å€‹File[]
+            editPictures.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            editPictures.setSize(260, 180);
+            editPictures.setVisible(true);
+            menu.setVisible(false);
+
         }
-        else if(!correctPictures & correctVideo){//¿ï¤F¥¿½Tªº¼v­µÀÉ>>©I¥svideoGUI
-            StringBuilder sb = new StringBuilder("±z¿ï¾ÜªºÀÉ®×¬O¡G");
+        else if(!correctPictures & correctVideo){//é¸äº†æ­£ç¢ºçš„å½±éŸ³æª”>>å‘¼å«videoGUI
+            StringBuilder sb = new StringBuilder("æ‚¨é¸æ“‡çš„æª”æ¡ˆæ˜¯ï¼š");
             sb.append("\n");
             sb.append(fileVideo.getName());
             JOptionPane.showMessageDialog(menu,sb);
-            
-            //Ãö³¬­º­¶¡A¶}±ÒvedioGUI¡A«İÀu¤Æ
+
+            //é—œé–‰é¦–é ï¼Œé–‹å•ŸvedioGUIï¼Œå¾…å„ªåŒ–
             menu.setVisible(false);
             new vedioGUI(fileVideo);
-            
         }
     }
 
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
-        //Set the Nimbus look and feel 
+        //Set the Nimbus look and feel
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -267,21 +272,21 @@ public class makingGIF {
                     break;
                 }
             }
-        } 
+        }
         catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(makingGIF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } 
+        }
         catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(makingGIF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } 
+        }
         catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(makingGIF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } 
+        }
         catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(makingGIF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        //Create and display the form 
+        //Create and display the form
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new makingGIF();

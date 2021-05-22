@@ -233,6 +233,7 @@ public class vedioGUI {
             		k++;
             	} 
             	
+            	menu.setVisible(false);
             	image2GIF editPictures = new image2GIF(filePictures);
                 editPictures.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 editPictures.setSize(1200, 800);
