@@ -1,9 +1,13 @@
 package demo.ex;
 
 import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.MultimediaInfo;
@@ -11,7 +15,9 @@ import it.sauronsoftware.jave.MultimediaInfo;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,13 +27,12 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-//第192行下載!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//AND圖片預覽我毫無頭緒!!!!!!!!!!!!!!!!!!!!!!!!!
 public class vedioGUI {
 
 	private int vedioLong;//影片長度
     private JFrame menu; //初始選單
-    private JPanel inputPanel;
+    private JPanel inputPanel = new JPanel();
+    private JPanel picturePanel = new JPanel();
     private JTextField startHour;
     private JTextField startMinute;
     private JTextField startSecond;
@@ -63,19 +68,20 @@ public class vedioGUI {
     	//視窗設定
         menu = new JFrame("vedio");
         menu.setLocationByPlatform(true);
-        menu.setSize(800, 600);
+        menu.setSize(1200, 800);
         menu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        menu.setLayout(null);		
+        menu.setLayout(new GridLayout(2, 1));	
+        
+        //input面板排版設定
+        inputPanel.setLayout(new GridLayout(5, 1));
              
         //視窗加入標題
         JLabel titleLabel = new JLabel("請選擇截圖時間及張數(2~10)", JLabel.CENTER);
-        titleLabel.setBounds(180,70,400,50);
         titleLabel.setFont(new java.awt.Font("Dialog", 1, 30));	//(字體，粗體，大小)
-        menu.add(titleLabel);      
+        inputPanel.add(titleLabel);      
         
-    	//input面板
-        inputPanel = new JPanel();
-        inputPanel.setBounds(220,200,320,170);
+        //start
+        JPanel startPanel = new JPanel();
         
         //時分秒Label
         JLabel hourLabel = new JLabel("時");
@@ -87,9 +93,8 @@ public class vedioGUI {
         
         //開始時間Label
         JLabel startTimeLabel = new JLabel("開始時間", JLabel.LEFT);
-        startTimeLabel.setBounds(0,0,200,50);
         startTimeLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(字體，粗體，大小)
-        inputPanel.add(startTimeLabel);
+        startPanel.add(startTimeLabel);
         
         //開始時間輸入
         startHour = new JTextField(3);
@@ -104,12 +109,17 @@ public class vedioGUI {
         startSecond.setDocument(new LimitedDocument(2,59, startSecond));
         startSecond.addFocusListener(new CustomFocusListener(startSecond, "1"));
         
-        inputPanel.add(startHour);
-        inputPanel.add(hourLabel);
-        inputPanel.add(startMinute);
-        inputPanel.add(minuteLabel);
-        inputPanel.add(startSecond);
-        inputPanel.add(secondLabel);
+        startPanel.add(startHour);
+        startPanel.add(hourLabel);
+        startPanel.add(startMinute);
+        startPanel.add(minuteLabel);
+        startPanel.add(startSecond);
+        startPanel.add(secondLabel);
+        
+        inputPanel.add(startPanel);
+        
+        //end
+        JPanel endPanel = new JPanel();
         
         //時分秒Label
         JLabel hourLabel1 = new JLabel("時");
@@ -121,9 +131,8 @@ public class vedioGUI {
         
         //結束時間Label
         JLabel endTimeLabel = new JLabel("結束時間", JLabel.LEFT);
-        endTimeLabel.setBounds(0,0,200,50);
         endTimeLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(字體，粗體，大小)
-        inputPanel.add(endTimeLabel);
+        endPanel.add(endTimeLabel);
         
         //結束時間輸入
         endHour = new JTextField(3);
@@ -138,73 +147,137 @@ public class vedioGUI {
         endSecond.setDocument(new LimitedDocument(2,59,endSecond));
         endSecond.addFocusListener(new CustomFocusListener(endSecond, "1"));
         
-        inputPanel.add(endHour);
-        inputPanel.add(hourLabel1);
-        inputPanel.add(endMinute);
-        inputPanel.add(minuteLabel1);
-        inputPanel.add(endSecond);
-        inputPanel.add(secondLabel1);
+        endPanel.add(endHour);
+        endPanel.add(hourLabel1);
+        endPanel.add(endMinute);
+        endPanel.add(minuteLabel1);
+        endPanel.add(endSecond);
+        endPanel.add(secondLabel1);
+        
+        inputPanel.add(endPanel);
+        
+        //pictureNum
+        JPanel numPanel = new JPanel();
         
         //截圖張數Label
         JLabel imageNumLabel = new JLabel("截圖數量(2~10)", JLabel.LEFT);
-        imageNumLabel.setBounds(0,0,200,50);
         imageNumLabel.setFont(new java.awt.Font("Dialog", 1, 20));	//(字體，粗體，大小)
-        inputPanel.add(imageNumLabel);
+        numPanel.add(imageNumLabel);
         
         //截圖張數輸入
-        num = new JTextField("2", 3);   
-        inputPanel.add(num);
+        num = new JTextField(3);   
+        num.setDocument(new LimitedDocument(2,10,num));
+        num.addFocusListener(new CustomFocusListener(num, "2"));
+        numPanel.add(num);
+        inputPanel.add(numPanel);
+        
+        //button面板
+        JPanel buttonPanel = new JPanel();
         
         //截圖Button
         capture = new JButton("截圖");
         capture.setFont(new java.awt.Font("Dialog", 1, 30));
-        capture.setBounds(40,380,200,100);
+        buttonPanel.add(capture);
         
         //開始gifButton
         start = new JButton("製作gif");
         start.setFont(new java.awt.Font("Dialog", 1, 30));
-        start.setBounds(290,380,200,100);
         start.setEnabled(false);
+        buttonPanel.add(start);
         
         //下載Button
         downLoad = new JButton("下載圖片");
         downLoad.setFont(new java.awt.Font("Dialog", 1, 30));
-        downLoad.setBounds(540,380,200,100);
         downLoad.setEnabled(false);
-
-        //panel和button加入視窗
+        buttonPanel.add(downLoad);
+        
+        inputPanel.add(buttonPanel);
+        //panel加入視窗
         menu.add(inputPanel);
-        menu.add(capture);
-        menu.add(start);
-        menu.add(downLoad);
         menu.setVisible(true);
         
         //capture button按下後執行
         capture.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
                 //開始編譯
+            	picturePanel.removeAll();
             	checkTime(e);
+            	viewPicture();
             }
         });
         
         //downLoad button按下後執行
         downLoad.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
-            	//幫我把picture資料夾的capture1~captureImageNum下載到使用者選擇的資料夾
+            	//把picture資料夾的capture1~captureImageNum下載到C:\\capturePictures
+            	for(int i = 1;i <= imageNum;i++) {
+            		File tempImage = new File("picture\\capture" + i + ".jpg");
+            		try {
+						new downloadCapturePictures(tempImage);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+            	}
             }
         });
         
         //start button按下後執行
         start.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
-            	menu.setVisible(false);
-                new imageGUI();
+            	int k = 1;
+            	File image = new File("picture");
+        		String imagePath = image.getAbsolutePath(); //圖片暫存位置
+            	File[] filePictures = new File[imageNum];     //紀錄選取的圖片檔
+            	for(int i = 0; i < imageNum; i++) {
+            		filePictures[i] = new File(imagePath + "\\capture" + k + ".jpg");
+            		k++;
+            	} 
+            	
+            	image2GIF editPictures = new image2GIF(filePictures);
+                editPictures.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                editPictures.setSize(1200, 800);
+                editPictures.setVisible(true);
+                menu.setVisible(false);
             }
         });
         
     }
     
-    //判斷input值，限制輸出的畫面長度及型態
+    private void viewPicture() {
+    	int k = 1;
+    	int width = 220, height = 180;
+    	
+    	File image = new File("picture");
+		String imagePath = image.getAbsolutePath(); //圖片暫存位置
+		
+    	ArrayList<ImageIcon> imgIcon = new ArrayList<ImageIcon>();
+    	ArrayList<JLabel> jlb = new ArrayList<JLabel>();
+    	
+    	for(int i = 0; i < imageNum; i++) {
+    		imgIcon.add(new ImageIcon(imagePath + "\\capture" + k + ".jpg"));
+    		k++;
+    	}
+    	
+    	for (ImageIcon picture : imgIcon) {
+            Image pic = picture.getImage().getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);   //設置圖片大小
+            ImageIcon picAdjust = new ImageIcon(pic);
+            JLabel j = new JLabel();
+            j.setIcon(picAdjust);
+            jlb.add(j);
+        }
+    	
+    	for(JLabel j : jlb)
+    		picturePanel.add(j);
+    	
+    	menu.add(picturePanel);
+    	
+    	for(JLabel j : jlb)
+    		j.setSize(width, height);
+    	
+    	menu.setVisible(true);
+    }
+
+	//判斷input值，限制輸出的畫面長度及型態
     @SuppressWarnings("serial")
     class LimitedDocument extends PlainDocument {
 
