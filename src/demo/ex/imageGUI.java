@@ -298,7 +298,7 @@ public class imageGUI {
         else if(correctSize & correctLastTime & correctRepeatTimes){//選了正確的影音檔>>呼叫image2GIF中製作GIF的function
         	//TODO
         	image2GIF gif = new image2GIF();
-        	gif.makeGIF(originalFiles , height.getText(), weight.getText());
+        	gif.makeGIF(originalFiles , height.getText(), weight.getText(), lastSeconds.getText());
         }
     }
 }
