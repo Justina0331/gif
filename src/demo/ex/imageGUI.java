@@ -295,8 +295,19 @@ public class imageGUI {
         	JOptionPane.showMessageDialog(menu,"請輸入正確重複次數(1~5)!");
         }
         else if(correctSize & correctLastTime & correctRepeatTimes){//選了正確的影音檔>>呼叫image2GIF中製作GIF的function
-        	//TODO
-        	
+        	image2GIF gif = new image2GIF();
+        	gif.makeGIF(originalFiles , height.getText(), weight.getText(), lastSeconds.getText());
+        	viewTestGIF(); 	 //GIF預覽
         }
+    }
+    private void viewTestGIF() { //GIF預覽
+    	JFrame viewGIF = new JFrame("Your GIF");
+    	viewGIF.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    	viewGIF.setSize(intSize[1], intSize[0]);
+    	
+    	ImageIcon GIF = (new ImageIcon("test.gif"));
+    	JLabel lGIF = new JLabel(GIF);
+    	viewGIF.add(lGIF);
+    	viewGIF.setVisible(true);
     }
 }
