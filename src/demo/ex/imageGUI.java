@@ -38,7 +38,7 @@ public class imageGUI {
     public ArrayList<ImageIcon> pictures = new ArrayList<ImageIcon>();  //尺寸300x300的圖片陣列
     private JScrollPane showImage;  //圖片預覽區(捲軸)
     private int[] intSize = new int[2];
-    private int intLastTime;
+    private Double intLastTime;
     private int intRepeatTimes;
     private boolean correctSize;  //是否選擇正確時間
     private boolean correctLastTime;   //是否選擇正確秒數(1~5)
@@ -51,7 +51,6 @@ public class imageGUI {
     private void setOriginalFiles(File[] files) {
     	this.originalFiles = files;
     }
-
 
     private void initComponents(File[] files) {
     	
@@ -82,11 +81,11 @@ public class imageGUI {
         
         //圖片尺寸輸入
         height = new JTextField(5);
-        height.setDocument(new LimitedDocument(100,900,height));		//輸入長度及型態設定
+        height.setDocument(new LimitedDocument(100,900.0,height));		//輸入長度及型態設定
         height.addFocusListener(new CustomFocusListener(height, "300"));	//默認輸入
         
         weight = new JTextField(5);
-        weight.setDocument(new LimitedDocument(100,900,weight));
+        weight.setDocument(new LimitedDocument(100,900.0,weight));
         weight.addFocusListener(new CustomFocusListener(weight, "300"));
 
         sizeJPanel.add(height);
@@ -105,8 +104,8 @@ public class imageGUI {
         
         //圖片秒數輸入
         lastSeconds = new JTextField(3);
-        lastSeconds.setDocument(new LimitedDocument(2,24,lastSeconds));		//輸入長度及型態設定
-        lastSeconds.addFocusListener(new CustomFocusListener(lastSeconds, "1"));	//默認輸入
+        lastSeconds.setDocument(new LimitedDocument(3,1.0,lastSeconds));		//輸入長度及型態設定
+        lastSeconds.addFocusListener(new CustomFocusListener(lastSeconds, "0.1"));	//默認輸入
 
         lastTimeJPanel.add(lastSeconds);
         lastTimeJPanel.add(secondSymbol);
@@ -123,7 +122,7 @@ public class imageGUI {
         
         //圖片秒數輸入
         repeatTimes = new JTextField(3);
-        repeatTimes.setDocument(new LimitedDocument(2,24,repeatTimes));		//輸入長度及型態設定
+        repeatTimes.setDocument(new LimitedDocument(2,5.0,repeatTimes));		//輸入長度及型態設定
         repeatTimes.addFocusListener(new CustomFocusListener(repeatTimes, "1"));	//默認輸入
 
         repeatTimesJPanel.add(repeatTimes);
@@ -178,11 +177,11 @@ public class imageGUI {
     class LimitedDocument extends PlainDocument {
 
 		private int _maxLength  = -1;
-		private int _maxValue = 0; // 最大值限制
-        private String _allowCharAsString = "0123456789";
+		private double _maxValue = 0; // 最大值限制
+        private String _allowCharAsString = "0123456789.";
         private JTextField F;
      
-        public LimitedDocument(int maxLength, int maxValue, JTextField F){
+        public LimitedDocument(int maxLength, Double maxValue, JTextField F){
             super();
             this._maxLength = maxLength;
             this._maxValue = maxValue;
@@ -200,14 +199,14 @@ public class imageGUI {
             String strOldValue = getText(0, getLength());
             byte[] tmp = strOldValue.getBytes();
             if(_maxLength != -1 && (tmp.length + charVal.length > _maxLength)){
-            	F.setText(Integer.toString(_maxValue));
+            	F.setText(Double.toString(_maxValue));
                 return;
             }
             
             String s = this.getText(0, this.getLength());
             s = s.substring(0, offset) + str + s.substring(offset, s.length());
             if (Double.parseDouble(s) > _maxValue) {
-            	F.setText(Integer.toString(_maxValue));
+            	F.setText(Double.toString(_maxValue));
             	return;
             }
             super.insertString(offset, str, attrSet);
@@ -253,7 +252,7 @@ public class imageGUI {
     	//將text字串轉為數字
     	intSize[0] = Integer.parseInt(height.getText());
     	intSize[1] = Integer.parseInt(weight.getText());
-    	intLastTime = Integer.parseInt(lastSeconds.getText());
+    	intLastTime = Double.parseDouble(lastSeconds.getText());
     	intRepeatTimes = Integer.parseInt(repeatTimes.getText());
 
     	
@@ -266,7 +265,7 @@ public class imageGUI {
     	}
     	
     	//判斷秒數有沒有正確
-    	if(intLastTime >= 1 & intLastTime <= 5) {
+    	if(intLastTime >= 0.1 & intLastTime <= 1) {
     		correctLastTime = true;
     	}
     	else {
@@ -290,15 +289,14 @@ public class imageGUI {
            JOptionPane.showMessageDialog(menu,"請輸入正確圖片尺寸(100~900)!");
         }
         else if(!correctLastTime){//秒數錯誤>>錯誤訊息
-            JOptionPane.showMessageDialog(menu,"請輸入正確數量(1~5)!");
+            JOptionPane.showMessageDialog(menu,"請輸入正確數量(0.1~1)!");
         }
         else if(!correctRepeatTimes){//次數錯誤>>錯誤訊息
         	JOptionPane.showMessageDialog(menu,"請輸入正確重複次數(1~5)!");
         }
         else if(correctSize & correctLastTime & correctRepeatTimes){//選了正確的影音檔>>呼叫image2GIF中製作GIF的function
         	//TODO
-        	image2GIF gif = new image2GIF();
-        	gif.makeGIF(originalFiles , height.getText(), weight.getText(), lastSeconds.getText());
+        	
         }
     }
 }
