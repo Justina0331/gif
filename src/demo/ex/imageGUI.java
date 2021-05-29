@@ -27,22 +27,21 @@ public class imageGUI {
     private JPanel markingJPanel;   //圖片預覽區
     private JPanel sizeJPanel;   //調整圖片尺寸區
     private JPanel lastTimeJPanel;   //調整圖片秒數區
-    private JPanel repeatTimesJPanel;   //調整圖片重複次數區
-    private JPanel inputJPanel;
-    private JPanel totalJPanel;   
+    private JPanel isSaveJPanel;
     private JTextField height;			//圖片長
     private JTextField weight;			//圖片寬
     private JTextField lastSeconds;			//圖片秒數
-    private JTextField repeatTimes;			//重複次數
+    private JRadioButton save;    //儲存
+    private JRadioButton notSave; //不存
+    private ButtonGroup isSaveButtonGroup;
     private JButton start;            //製作GIF
     public ArrayList<ImageIcon> pictures = new ArrayList<ImageIcon>();  //尺寸300x300的圖片陣列
     private JScrollPane showImage;  //圖片預覽區(捲軸)
     private int[] intSize = new int[2];
     private Double intLastTime;
-    private int intRepeatTimes;
     private boolean correctSize;  //是否選擇正確時間
     private boolean correctLastTime;   //是否選擇正確秒數(1~5)
-    private boolean correctRepeatTimes;   //是否選擇正確重複次數(1~5)
+    private boolean isSave;
     
     public imageGUI(File[] files) {
         initComponents(files);
@@ -110,24 +109,29 @@ public class imageGUI {
         lastTimeJPanel.add(lastSeconds);
         lastTimeJPanel.add(secondSymbol);
 
-        //圖片重複次數Label
-        repeatTimesJPanel = new JPanel();
-        repeatTimesJPanel.setBounds(350,540,500,60);
-        JLabel repeatTimesJLabel = new JLabel("設定圖片重複次數(1~5):", JLabel.CENTER);
-        JLabel repeatTimesSymbol = new JLabel("次");
-        repeatTimesSymbol.setFont(new java.awt.Font("Dialog", 1, 20));	//(字體，粗體，大小)
-        repeatTimesJLabel.setBounds(0,0,200,50);
-        repeatTimesJLabel.setFont(new java.awt.Font("Dialog", 1, 20));	
-        repeatTimesJPanel.add(repeatTimesJLabel);
-        
-        //圖片秒數輸入
-        repeatTimes = new JTextField(3);
-        repeatTimes.setDocument(new LimitedDocument(2,5.0,repeatTimes));		//輸入長度及型態設定
-        repeatTimes.addFocusListener(new CustomFocusListener(repeatTimes, "1"));	//默認輸入
 
-        repeatTimesJPanel.add(repeatTimes);
-        repeatTimesJPanel.add(repeatTimesSymbol);
-        
+        //是否留下更改大小後之圖片
+        isSaveJPanel = new JPanel();
+        isSaveJPanel.setLayout(new FlowLayout());
+        isSaveJPanel.setBounds(350,540,500,60);
+        JLabel isSaveJLabel = new JLabel("是否留下更改大小後圖片檔：");
+        isSaveJLabel.setBounds(0,0,200,50);
+        isSaveJLabel.setFont(new java.awt.Font("Dialog", 1, 20));
+
+        save = new JRadioButton("儲存");
+        save.setFont(new java.awt.Font("Dialog", 1, 15));
+        notSave = new JRadioButton("不儲存");
+        notSave.setFont(new java.awt.Font("Dialog", 1, 15));
+        notSave.setSelected(true);
+        isSaveButtonGroup = new ButtonGroup();
+        isSaveButtonGroup.add(save);
+        isSaveButtonGroup.add(notSave);
+
+
+        isSaveJPanel.add(isSaveJLabel);
+        isSaveJPanel.add(save);
+        isSaveJPanel.add(notSave);
+
         //開始製作GIF Button
         start = new JButton("完成製作");
         start.setFont(new java.awt.Font("Dialog", 1, 40));
@@ -136,7 +140,7 @@ public class imageGUI {
         //panel和button加入視窗
         menu.add(sizeJPanel);
         menu.add(lastTimeJPanel);
-        menu.add(repeatTimesJPanel);
+        menu.add(isSaveJPanel);
         menu.add(start);
         menu.setVisible(true);
 
@@ -253,7 +257,6 @@ public class imageGUI {
     	intSize[0] = Integer.parseInt(height.getText());
     	intSize[1] = Integer.parseInt(weight.getText());
     	intLastTime = Double.parseDouble(lastSeconds.getText());
-    	intRepeatTimes = Integer.parseInt(repeatTimes.getText());
 
     	
     	//判斷尺寸有沒有正確
@@ -271,16 +274,14 @@ public class imageGUI {
     	else {
     		correctLastTime = false;
     	}
-    	
-    	//判斷重複次數有沒有正確
-    	if(intRepeatTimes >= 1 & intRepeatTimes <= 5) {
-    		correctRepeatTimes = true;
-    	}
-    	else {
-    		correctRepeatTimes = false;
-    	}
-    	
-	    startPerformed(e2);
+        //是否保留圖片
+        if(save.isSelected()){
+            isSave = true;
+        }
+        else{
+            isSave = false;
+        }
+        startPerformed(e2);
     }
 
     private void startPerformed(ActionEvent e3) {
@@ -291,12 +292,9 @@ public class imageGUI {
         else if(!correctLastTime){//秒數錯誤>>錯誤訊息
             JOptionPane.showMessageDialog(menu,"請輸入正確數量(0.1~1)!");
         }
-        else if(!correctRepeatTimes){//次數錯誤>>錯誤訊息
-        	JOptionPane.showMessageDialog(menu,"請輸入正確重複次數(1~5)!");
-        }
-        else if(correctSize & correctLastTime & correctRepeatTimes){//選了正確的影音檔>>呼叫image2GIF中製作GIF的function
+        else if(correctSize & correctLastTime){//選了正確的影音檔>>呼叫image2GIF中製作GIF的function
         	image2GIF gif = new image2GIF();
-        	gif.makeGIF(originalFiles , height.getText(), weight.getText(), lastSeconds.getText());
+        	gif.makeGIF(originalFiles , height.getText(), weight.getText(), lastSeconds.getText(), isSave);
         	viewTestGIF(); 	 //GIF預覽
         }
     }
