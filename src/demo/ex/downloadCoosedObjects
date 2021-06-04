@@ -3,12 +3,12 @@ package demo.ex;
 import java.io.File;
 import javax.swing.*;
 
-public class downloadCapturePictures {
-	private static String DirMove = "C:\\capturePictures"; //目標資料夾
+public class downloadCoosedObjects {
+	private static String DirMove = "C:\\yourDowloadings"; //目標資料夾
 	private static String source; //來源照片路徑
 	private static String srcPicturesName;
 	
-	public downloadCapturePictures(File srcPictures) throws java.io.IOException {
+	public downloadCoosedObjects(File srcPictures) throws java.io.IOException {
 		// 來源
 		source = srcPictures.getPath();
 		srcPicturesName = srcPictures.getName();
