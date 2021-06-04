@@ -223,13 +223,13 @@ public class vedioGUI {
         //downLoad button按下後執行
         downLoad.addActionListener(new ActionListener(){ 
             public void actionPerformed(ActionEvent e){ 
-            	//把picture資料夾的capture1~captureImageNum下載到C:\\capturePictures
+            	//把picture資料夾的capture1~captureImageNum下載到C:\\yourDowloadings
             	boolean doDoenload = false;
             	for(int i = 1;i <= imageNum;i++) {
             		if(chooseImage[i - 1].getBackground().getRGB() == -20561) {
             			File tempImage = new File("picture\\capture" + i + ".jpg");
 	            		try {
-							new downloadCapturePictures(tempImage);
+							new downloadCoosedObjects(tempImage);
 							doDoenload = true;
 						} catch (IOException e1) {
 							e1.printStackTrace();
