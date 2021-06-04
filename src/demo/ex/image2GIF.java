@@ -15,6 +15,7 @@ import javax.swing.*;
 
 public class image2GIF extends JFrame
 {
+	private boolean saveNewPictures;  //是否正確儲存改變大小的圖片
     private ArrayList<File> newFiles = new ArrayList<File>(); //更改大小後路徑
 
     public void makeGIF(File[] files, String height, String width, String time, boolean isSave) { //圖片轉GIF
@@ -123,9 +124,15 @@ public class image2GIF extends JFrame
                 String fileName = upFile + "\\new\\" + path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."));
                 newFiles.add(new File(fileName + ".jpg"));
                 ImageIO.write(outputImage, "jpg", newFiles.get(newFiles.size() - 1));
+                this.saveNewPictures = true;
             } catch (IOException e) {
                 System.out.println("檔案讀取失敗");
+                this.saveNewPictures = false;
             }
         }//end for
     }//end function resize
+    
+    public boolean getSaveNewPictures() {
+    	return this.saveNewPictures;
+    }
 } // end class image2GIF
