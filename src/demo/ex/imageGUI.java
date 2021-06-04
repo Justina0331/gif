@@ -94,7 +94,7 @@ public class imageGUI {
         //圖片秒數Label
         lastTimeJPanel = new JPanel();
         lastTimeJPanel.setBounds(350,480,500,60);
-        JLabel lastTimeJLabel = new JLabel("設定圖片秒數(1~5):", JLabel.CENTER);
+        JLabel lastTimeJLabel = new JLabel("設定圖片秒數(0~1):", JLabel.CENTER);
         JLabel secondSymbol = new JLabel("秒/張");
         secondSymbol.setFont(new java.awt.Font("Dialog", 1, 20));	//(字體，粗體，大小)
         lastTimeJLabel.setBounds(0,0,200,50);
