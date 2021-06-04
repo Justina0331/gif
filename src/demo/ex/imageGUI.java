@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -35,6 +36,7 @@ public class imageGUI {
     private JRadioButton notSave; //不存
     private ButtonGroup isSaveButtonGroup;
     private JButton start;            //製作GIF
+    private JButton download;            //製作GIF
     public ArrayList<ImageIcon> pictures = new ArrayList<ImageIcon>();  //尺寸300x300的圖片陣列
     private JScrollPane showImage;  //圖片預覽區(捲軸)
     private int[] intSize = new int[2];
@@ -42,6 +44,7 @@ public class imageGUI {
     private boolean correctSize;  //是否選擇正確時間
     private boolean correctLastTime;   //是否選擇正確秒數(1~5)
     private boolean isSave;
+    private image2GIF gif;
     
     public imageGUI(File[] files) {
         initComponents(files);
@@ -133,21 +136,35 @@ public class imageGUI {
         isSaveJPanel.add(notSave);
 
         //開始製作GIF Button
-        start = new JButton("完成製作");
+        start = new JButton("製作");
         start.setFont(new java.awt.Font("Dialog", 1, 40));
-        start.setBounds(500,600,200,100);
+        start.setBounds(350,600,200,100);
+        
+        //下載GIF Button
+        download = new JButton("下載");
+        download.setFont(new java.awt.Font("Dialog", 1, 40));
+        download.setBounds(700,600,200,100);
+        download.setEnabled(false);
         
         //panel和button加入視窗
         menu.add(sizeJPanel);
         menu.add(lastTimeJPanel);
         menu.add(isSaveJPanel);
         menu.add(start);
+        menu.add(download);
         menu.setVisible(true);
 
         start.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 //開始編譯
             	checkInput(e);
+            }
+        });
+        
+        download.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //開始下載
+            	dowloadGIF();
             }
         });
     }
@@ -284,7 +301,7 @@ public class imageGUI {
         startPerformed(e2);
     }
 
-    private void startPerformed(ActionEvent e3) {
+	private void startPerformed(ActionEvent e3) {
         //確認訊息
         if(!correctSize){//尺寸錯誤>>錯誤訊息
            JOptionPane.showMessageDialog(menu,"請輸入正確圖片尺寸(100~900)!");
@@ -293,8 +310,9 @@ public class imageGUI {
             JOptionPane.showMessageDialog(menu,"請輸入正確數量(0.1~1)!");
         }
         else if(correctSize & correctLastTime){//選了正確的影音檔>>呼叫image2GIF中製作GIF的function
-        	image2GIF gif = new image2GIF();
+        	gif = new image2GIF();
         	gif.makeGIF(originalFiles , height.getText(), weight.getText(), lastSeconds.getText(), isSave);
+        	download.setEnabled(true); //正確製作完gif則可下載
         	viewTestGIF(); 	 //GIF預覽
         }
     }
@@ -307,5 +325,22 @@ public class imageGUI {
     	JLabel lGIF = new JLabel(GIF);
     	viewGIF.add(lGIF);
     	viewGIF.setVisible(true);
+    	if(isSave) {//檢查是否正確儲存新大小圖片
+    		if(gif.getSaveNewPictures()) {
+        		JOptionPane.showMessageDialog(null,"已儲存新大小圖片至來源資料夾!");
+        	}
+        	else {
+        		JOptionPane.showMessageDialog(null,"未能正確儲存新大小圖片至來源資料夾!");
+        	}
+    	}
+    }
+    
+    private void dowloadGIF() { //GIF下載
+    	try {
+			new downloadCoosedObjects(new File("test.gif"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.exit(0);
     }
 }
