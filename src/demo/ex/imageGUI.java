@@ -337,7 +337,7 @@ public class imageGUI {
     
     private void dowloadGIF() { //GIF下載
     	try {
-			new downloadCoosedObjects(new File("test.gif"));
+			new downloadChoosedObjects(new File("test.gif"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
