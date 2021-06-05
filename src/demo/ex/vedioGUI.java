@@ -229,7 +229,7 @@ public class vedioGUI {
             		if(chooseImage[i - 1].getBackground().getRGB() == -20561) {
             			File tempImage = new File("picture\\capture" + i + ".jpg");
 	            		try {
-							new downloadCoosedObjects(tempImage);
+							new downloadChoosedObjects(tempImage);
 							doDoenload = true;
 						} catch (IOException e1) {
 							e1.printStackTrace();
