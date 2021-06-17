@@ -145,7 +145,8 @@ public class makingGIF {
             if(filePictures.length >= 2 & filePictures.length <= 10){ //檢查上傳之張數
                 for (File file : this.filePictures) {
                     String fileType = file.getName().substring(file.getName().lastIndexOf("."));
-                    if(!fileType.equals(".png") & !fileType.equals(".jpg")){ //檢查上傳之檔案類型
+                    fileType = fileType.toLowerCase();  //大小寫轉換
+                    if(!fileType.equals(".png") & !fileType.equals(".jpg") ){ //檢查上傳之檔案類型
                         correctPictures = false;
                         break;
                     }
@@ -188,6 +189,7 @@ public class makingGIF {
             this.fileVideo = fileChooser.getSelectedFile();
             if(fileVideo != null){ //檢查是否上傳
                 String fileType = fileVideo.getName().substring(fileVideo.getName().lastIndexOf("."));
+                fileType = fileType.toLowerCase();  //大小寫轉換
                 if(!fileType.equals(".mp4") & !fileType.equals(".mkv")){ //檢查上傳之檔案類型
                     correctVideo = false;
                 }
@@ -241,6 +243,7 @@ public class makingGIF {
             }
             JOptionPane.showMessageDialog(menu,sb);
             
+          //關閉首頁，開啟imageGUI
             imageGUI editPictures = new  imageGUI(filePictures); 
             menu.setVisible(false);
 
@@ -251,7 +254,7 @@ public class makingGIF {
             sb.append(fileVideo.getName());
             JOptionPane.showMessageDialog(menu,sb);
 
-            //關閉首頁，開啟vedioGUI，待優化
+            //關閉首頁，開啟vedioGUI
             menu.setVisible(false);
             new vedioGUI(fileVideo);
         }
