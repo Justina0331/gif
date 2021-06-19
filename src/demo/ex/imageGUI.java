@@ -6,10 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +16,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import java.awt.Cursor; //鼠標
 import demo.ex.vedioGUI.CustomFocusListener;
 import demo.ex.vedioGUI.LimitedDocument;
 
@@ -45,6 +43,10 @@ public class imageGUI {
     private boolean correctLastTime;   //是否選擇正確秒數(1~5)
     private boolean isSave;
     private image2GIF gif;
+
+    private ArrayList<Integer> index;//圖片順序
+    private ArrayList<JLabel> chosenLabel;//選取圖片
+
     
     public imageGUI(File[] files) {
         initComponents(files);
@@ -70,7 +72,13 @@ public class imageGUI {
             //System.out.print(file.getPath());
         }
         showUploadedPictures(pictures);
-        
+
+        //提示
+        JLabel hintJLabel = new JLabel("↑請選擇圖片順序↑(預設為現顯示順序)", JLabel.CENTER);
+        hintJLabel.setBounds(350,360,500,60);
+        hintJLabel.setFont(new java.awt.Font("Dialog", 1, 20));
+        menu.add(hintJLabel);
+
         //圖片尺寸Label
         sizeJPanel = new JPanel();
         sizeJPanel.setBounds(350,420,500,60);
@@ -97,7 +105,7 @@ public class imageGUI {
         //圖片秒數Label
         lastTimeJPanel = new JPanel();
         lastTimeJPanel.setBounds(350,480,500,60);
-        JLabel lastTimeJLabel = new JLabel("設定圖片秒數(0~1):", JLabel.CENTER);
+        JLabel lastTimeJLabel = new JLabel("設定圖片秒數(0.1~1):", JLabel.CENTER);
         JLabel secondSymbol = new JLabel("秒/張");
         secondSymbol.setFont(new java.awt.Font("Dialog", 1, 20));	//(字體，粗體，大小)
         lastTimeJLabel.setBounds(0,0,200,50);
@@ -171,14 +179,50 @@ public class imageGUI {
        
     private void showUploadedPictures(ArrayList<ImageIcon> pictures){    //顯示上傳圖片
     	markingJPanel = new JPanel();
+        index = new ArrayList<>();
+        ArrayList<JLabel> viewLabels = new ArrayList<>();
+        chosenLabel = new ArrayList<>();
         for (ImageIcon picture : pictures) {
             Image pic = picture.getImage().getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);   //設置圖片default大小為(300,300)
             ImageIcon picAdjust = new ImageIcon(pic);
             JLabel label2 = new JLabel(picAdjust, SwingConstants.LEFT);
             label2.setToolTipText("This is " + picture);
+            viewLabels.add(label2);
             markingJPanel.add(label2);
-            //輪流彈出圖片
-            //JOptionPane.showInternalMessageDialog(null, null, "preview picture", JOptionPane.PLAIN_MESSAGE, picAdjust);
+            label2.addMouseListener(new MouseListener(){
+                public void mouseEntered(MouseEvent event){ //滑鼠移入改變鼠標
+                    Cursor cu = new Cursor(Cursor.HAND_CURSOR);
+                    menu.setCursor(cu);
+                }
+                public void mouseExited(MouseEvent e) {//滑鼠移出鼠標變回
+                    Cursor cu = new Cursor(Cursor.DEFAULT_CURSOR);
+                    menu.setCursor(cu);
+                }
+                public void mouseReleased(MouseEvent e){}
+                public void mousePressed(MouseEvent e){}
+                public void mouseClicked( MouseEvent event ){
+                    if(chosenLabel.indexOf(event.getSource()) >= 0) { //取消選取
+                        //取消文字.邊框
+                        label2.setText(null);
+                        label2.setBorder(BorderFactory.createEmptyBorder());
+                        index.remove(index.indexOf(viewLabels.indexOf(label2)));
+                        chosenLabel.remove(label2);
+                        //重設text順序
+                        for(JLabel label: chosenLabel) {
+                            label.setText((chosenLabel.indexOf(label) + 1) + " ");
+                        }
+                    }
+                    else {//選取
+                        chosenLabel.add(label2);
+                        index.add(viewLabels.indexOf(label2));
+                        //加入順序標示.邊框
+                        label2.setFont(new java.awt.Font("Dialog", 1, 20));
+                        label2.setText(chosenLabel.size() + " ");
+                        label2.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5, true));
+                        label2.setIconTextGap(5);
+                    }
+                }
+            }) ;
         }
         showImage=new JScrollPane(markingJPanel);  //設定捲軸
         //showImage.setLayout(null);
@@ -311,11 +355,20 @@ public class imageGUI {
         }
         else if(correctSize & correctLastTime){//選了正確的影音檔>>呼叫image2GIF中製作GIF的function
         	gif = new image2GIF();
-        	gif.makeGIF(originalFiles , height.getText(), weight.getText(), lastSeconds.getText(), isSave);
+        	gif.makeGIF(reloadFiles(), height.getText(), weight.getText(), lastSeconds.getText(), isSave);
         	download.setEnabled(true); //正確製作完gif則可下載
         	viewTestGIF(); 	 //GIF預覽
         }
     }
+    private File[] reloadFiles(){
+        if(index.size() == 0){return originalFiles;}
+        File[] chosenFiles = new File[index.size()];
+        for (int i : index) {
+            chosenFiles[index.indexOf(i)] = new File(originalFiles[i].getPath());
+        }
+        return chosenFiles;
+    }
+
     private void viewTestGIF() { //GIF預覽
     	JFrame viewGIF = new JFrame("Your GIF");
     	viewGIF.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -341,5 +394,6 @@ public class imageGUI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.exit(0);
     }
 }
