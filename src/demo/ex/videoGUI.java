@@ -30,7 +30,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-public class vedioGUI {
+public class videoGUI {
 
 	private int vedioLong;//影片長度
     private JFrame menu; //初始選單
@@ -55,7 +55,7 @@ public class vedioGUI {
     private JButton[] chooseImage;
 
     //Creates new form makingGIF
-    public vedioGUI(File fileVideo) {
+    public videoGUI(File fileVideo) {
     	Encoder encoder = new Encoder();
     	try {
     		MultimediaInfo m = encoder.getInfo(fileVideo);
