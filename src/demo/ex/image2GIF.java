@@ -21,7 +21,7 @@ public class image2GIF extends JFrame
     public void makeGIF(File[] files, String height, String width, String time, boolean isSave) { //圖片轉GIF
         resizeGraph(files, height, width);
 
-        File ffmpeg = new File("bin\\ffmpeg\\bin\\ffmpeg.exe");
+        File ffmpeg = new File("ffmpeg\\bin\\ffmpeg.exe");
         ArrayList<String> commands = new ArrayList<String>();
         commands.add(ffmpeg.getAbsolutePath());    //指令路徑
 
@@ -83,22 +83,6 @@ public class image2GIF extends JFrame
         }
         commands.clear();
 
-        //預覽播放
-        File ffplay = new File("bin\\ffmpeg\\bin\\ffplay.exe");
-        commands.add(ffplay.getAbsolutePath());
-        //commands.add("-framedrop");
-        commands.add("-window_title");
-        //commands.add("執行兩秒就會當機的預覽播放");
-        commands.add("test.gif");
-        try {
-            ProcessBuilder builder = new ProcessBuilder(commands);
-            builder.redirectErrorStream(true);
-            Process process = builder.start();
-            //readProcessOutput(process.getInputStream(), System.out);	//cmd執行結果(debug用)
-            process.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void resizeGraph(File[] files, String height, String width) { //改變圖片大小

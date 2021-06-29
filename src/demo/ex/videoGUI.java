@@ -30,7 +30,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-public class vedioGUI {
+public class videoGUI {
 
 	private int vedioLong;//影片長度
     private JFrame menu; //初始選單
@@ -55,7 +55,7 @@ public class vedioGUI {
     private JButton[] chooseImage;
 
     //Creates new form makingGIF
-    public vedioGUI(File fileVideo) {
+    public videoGUI(File fileVideo) {
     	Encoder encoder = new Encoder();
     	try {
     		MultimediaInfo m = encoder.getInfo(fileVideo);
@@ -349,41 +349,6 @@ public class vedioGUI {
             }
             super.insertString(offset, str, attrSet);
         }
-    }
-    
-    //判斷使用者有沒有input，未輸入給予預設值
-    class CustomFocusListener implements FocusListener {
-    	
-    	private String hintText;
-    	private JTextField textField;
-    	public CustomFocusListener(JTextField jTextField,String hintText) {
-    		this.textField = jTextField;
-    		this.hintText = hintText;
-    		jTextField.setText(hintText);  //默認提示內容
-    		jTextField.setForeground(Color.GRAY);
-    	}
-     
-    	@Override
-    	public void focusGained(FocusEvent e) {
-    		//使用者若有輸入，清空提示内容
-    		String temp = textField.getText();
-    		if(temp.equals(hintText)) {
-    			textField.setText("");
-    			textField.setForeground(Color.BLACK);
-    		}	
-    	}
-     
-    	@Override
-    	public void focusLost(FocusEvent e) {	
-    		//失去輸入內容時，顯示提示內容
-    		String temp = textField.getText();
-    		if(temp.equals("")) {
-    			textField.setForeground(Color.GRAY);
-    			textField.setText(hintText);
-    		}
-    		
-    	}
-
     }
     
     private void checkTime(ActionEvent e2) {

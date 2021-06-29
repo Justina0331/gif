@@ -256,7 +256,7 @@ public class makingGIF {
 
             //關閉首頁，開啟vedioGUI
             menu.setVisible(false);
-            new vedioGUI(fileVideo);
+            new videoGUI(fileVideo);
         }
     }
 

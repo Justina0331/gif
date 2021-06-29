@@ -20,10 +20,13 @@ public class video2Image {
 	private String pictureNum;
 	
 	public video2Image(File fileVideo){
-		File ffmpeg = new File("bin\\ffmpeg\\bin\\ffmpeg.exe");	//外掛
+		File ffmpeg = new File("ffmpeg\\bin\\ffmpeg.exe");	//外掛
 		this.ffmpegPath = ffmpeg.getAbsolutePath();
 		this.veidoPath = fileVideo.getPath(); //影片路徑
 		File image = new File("picture");
+		if (!image.exists()) { //目標資料夾不存在則建立新目標資料夾
+			image.mkdirs();
+		}
 		this.imagePath = image.getAbsolutePath(); //圖片暫存位置
 	}
 	
